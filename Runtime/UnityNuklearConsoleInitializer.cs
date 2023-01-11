@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chutpot.Nuklear.Console
 {
-    public class UnityNuklearInitializer : MonoBehaviour
+    public class UnityNuklearConsoleInitializer : MonoBehaviour
     {
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void RuntimeInitializeOnLoadMethodAfterSceneLoad()

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3630345289876117857}
   - component: {fileID: -7584757833080813591}
+  - component: {fileID: -1610809741969341815}
   m_Layer: 0
   m_Name: UnityNuklearConsole
   m_TagString: Untagged
@@ -41,5 +42,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2cd4f72d5937fe8468016fbc7a273301, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-1610809741969341815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4740628351390824943}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6faa1d59ecac1a34e921e88230bef516, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -11,6 +11,7 @@ namespace Chutpot.Nuklear.Console
         [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
         private static extern void InitializeConsole();
 
+
         private void Awake()
         {
             DontDestroyOnLoad(gameObject);
