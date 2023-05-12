@@ -9,27 +9,22 @@ namespace Chutpot.Nuklear.Console
         [ConsoleCommand("list", "List all existing commands", true)]
         internal static void List()
         {
-            string buffer = "Total Console Commands: " + ConsoleCommand.Commands.Count + "\n";
+            Console.Log("Total Console Commands: " + ConsoleCommand.Commands.Count);
 
             foreach (var command in ConsoleCommand.Commands)
             {
-                buffer += "\t\t\t\t" + command.Key + " -> \"" + command.Value.Explanation + "\"";
-                if (command.Value.ParamaterTypes != null) 
+                var buffer = command.Key + " -> \"" + command.Value.Explanation + "\"";
+
+                if (command.Value.ParamaterTypes != null)
                 {
-                    var paramsBuffer = string.Empty;
+                    buffer += ", params";
                     foreach (var param in command.Value.ParamaterTypes)
                     {
-                        paramsBuffer += $"<{param.Name}>";
+                        buffer += $"<{param.Name}>";
                     }
-                    if(paramsBuffer != string.Empty) 
-                    {
-                        paramsBuffer = ": params" + paramsBuffer;
-                    }
-                    buffer += paramsBuffer + "\n";
                 }
+                Console.Log(buffer);
             }
-
-            Console.Log(buffer);
         }
 
         [ConsoleCommand("help", "Get help about console", true)]
@@ -42,8 +37,7 @@ namespace Chutpot.Nuklear.Console
         [ConsoleCommand("copyat", "Copy the message at the index", true)]
         internal static void CopyAt(int index)
         {
-            GUIUtility.systemCopyBuffer = ConsoleLogger.Logs[index].message;
-
+            GUIUtility.systemCopyBuffer = ConsoleLogger.Logs[index].message.ToString();
         }
 
         [ConsoleCommand("time", "Print the current time", true)]
@@ -65,14 +59,12 @@ namespace Chutpot.Nuklear.Console
         [ConsoleCommand("game", "Print details about build", true)]
         internal static void Game() 
         {
-            string buffer = string.Empty;
-            buffer += $"{Application.productName}, {Application.version}, {Application.unityVersion} \n";
+            Console.Log($"{Application.productName}, {Application.version}, {Application.unityVersion}");
             foreach(var arg in Environment.GetCommandLineArgs()) 
             {
-                buffer += $"\t\t\t\t{arg} \n";
+                Console.Log(arg);
             }
  
-            Console.Log(buffer);
         }
     }
 }

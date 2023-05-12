@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3630345289876117857}
   - component: {fileID: -7584757833080813591}
-  - component: {fileID: -1610809741969341815}
+  - component: {fileID: 5361314179148249143}
   m_Layer: 0
   m_Name: UnityNuklearConsole
   m_TagString: Untagged
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cd4f72d5937fe8468016fbc7a273301, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &-1610809741969341815
+--- !u!114 &5361314179148249143
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,6 +53,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4740628351390824943}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6faa1d59ecac1a34e921e88230bef516, type: 3}
+  m_Script: {fileID: 11500000, guid: 4edd1d8aa74e07c41b1e4c6c2c8ab48f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
