@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using UnityEditor.Search;
 using UnityEngine;
 using static NuklearDotNet.Nuklear;
 
@@ -18,13 +17,25 @@ namespace Chutpot.Nuklear.Console
     public unsafe class UnityNuklearConsole : MonoBehaviour, INuklearApp
     {
 
+        private bool _isOpen;
         private StringBuilder _buffer;
 
         private void Awake()
         {
+            _isOpen = false;
             _buffer = new StringBuilder(255);
             DontDestroyOnLoad(gameObject);
             Application.logMessageReceived += ConsoleLogger.OnLogMessageReceived;
+        }
+
+        private void Update()
+        {
+#if ENABLE_LEGACY_INPUT_MANAGER
+            if (Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                _isOpen = !_isOpen;
+            }
+#endif
         }
 
         private void Start()
@@ -40,11 +51,12 @@ namespace Chutpot.Nuklear.Console
             UnityNuklearRenderer.RemoveNuklearApp(this);
         }
 
-        // Initialize Console at start to be sure Loader is initialized before initialization
-
         public unsafe void Render(nk_context* ctx)
         {
-            const NkPanelFlags flags = NkPanelFlags.Border | NkPanelFlags.Movable | NkPanelFlags.Minimizable | NkPanelFlags.Title | NkPanelFlags.NoScrollbar;
+            if (!_isOpen)
+                return;
+
+            const NkPanelFlags flags = NkPanelFlags.Border | NkPanelFlags.Movable | NkPanelFlags.Minimizable | NkPanelFlags.Title | NkPanelFlags.NoScrollbar | NkPanelFlags.Scalable;
 
             if (nk_begin(ctx, "Chutpot Console", new NkRect(50, 50, 750, 300),
                 (uint)flags) != 0)
@@ -68,6 +80,7 @@ namespace Chutpot.Nuklear.Console
                 {
                     ConsoleCommand.ExecuteCommand(_buffer.ToString());
                     _buffer.Clear();
+                    nk_group_set_scroll(ctx, "Group", uint.MaxValue, uint.MaxValue);
                 }
                 
             }

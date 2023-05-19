@@ -194,7 +194,8 @@ namespace Chutpot.Nuklear.Console
         {
             if (string.IsNullOrEmpty(rawInput))
             {
-                throw new ArgumentNullException(nameof(rawInput));
+                //throw new ArgumentNullException(nameof(rawInput));
+                return;
             }
 
             string[] args = GetArgs(rawInput);
