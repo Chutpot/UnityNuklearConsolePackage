@@ -21,19 +21,16 @@ namespace Chutpot.Nuklear.Console
         internal static void Clear() 
         {
             _logs.Clear();
-            UnityNuklearConsole.Clear();
         }
 
         internal static void Log(string log, ConsoleLogType type)
         {
             _logs.Add(new ConsoleLog($"[{_logs.Count}] {log}", type));
-            UnityNuklearConsole.AddLog(new ConsoleLog($"[{_logs.Count}] {log}", type));
         }
 
         internal static void OnLogMessageReceived(string condition, string stackTrace, LogType type)
         {
             _logs.Add(new ConsoleLog($"[{_logs.Count}] " + condition + " @ " + stackTrace, (ConsoleLogType)type));
-            UnityNuklearConsole.AddLog(new ConsoleLog($"[{_logs.Count}] " + condition + " @ " + stackTrace, (ConsoleLogType)type));
         }
     }
 }

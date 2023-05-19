@@ -1,86 +1,77 @@
 using AOT;
+using Chutpot.Nuklear.Loader;
+using NuklearDotNet;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 using UnityEditor.Search;
 using UnityEngine;
-using static Chutpot.Nuklear.Loader.UnityNuklearRenderer;
-using static UnityEngine.Networking.UnityWebRequest;
+using static NuklearDotNet.Nuklear;
+
 
 namespace Chutpot.Nuklear.Console
 {
-    [StructLayout(LayoutKind.Sequential)]
-    internal struct CommandStruct
+
+    public unsafe class UnityNuklearConsole : MonoBehaviour, INuklearApp
     {
-        public string message;
-        public int lenght;
-    }
 
-
-    public class UnityNuklearConsole : MonoBehaviour
-    {
-        [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void InitializeConsole(SendCommandCallback callback);
-        [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
-        internal extern static void AddLog(ConsoleLog log);
-        [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
-        internal extern static void Clear();
-        [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
-        internal extern static CommandStruct PopCommand();
-
-        public delegate void SendCommandCallback(IntPtr log, int size);
-
+        private StringBuilder _buffer;
 
         private void Awake()
         {
+            _buffer = new StringBuilder(255);
             DontDestroyOnLoad(gameObject);
             Application.logMessageReceived += ConsoleLogger.OnLogMessageReceived;
         }
 
-        private void Update()
+        private void Start()
         {
-            var commandStruct = PopCommand();
-            var command = Marshal.PtrToStructure<>;
-            while (!string.IsNullOrWhiteSpace(command))
-            {
-                Debug.Log(command);
-                ConsoleCommand.ExecuteCommand(command);
-                PopCommand(str, length);
-                command = Marshal.PtrToStringAnsi(str, Marshal.PtrToStructure<int>(length));
-            }
+            ConsoleCommands.List();
+            UnityNuklearRenderer.AddNuklearApp(this);
         }
+
 
         private void OnDestroy()
         {
             Application.logMessageReceived -= ConsoleLogger.OnLogMessageReceived;
+            UnityNuklearRenderer.RemoveNuklearApp(this);
         }
 
         // Initialize Console at start to be sure Loader is initialized before initialization
-        private void Start()
-        {
-            InitializeConsole(OnSendCommandCallback);
-            ConsoleCommands.List();
-        }
 
-#if ENABLE_MONO
-        [MonoPInvokeCallback(typeof(SendCommandCallback))]
-#elif ENABLE_IL2CPP
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
-#endif
-        private static void OnSendCommandCallback(IntPtr log, int size)
+        public unsafe void Render(nk_context* ctx)
         {
-            // oddly Try catch block someshow prevent from crashing
-            try
+            const NkPanelFlags flags = NkPanelFlags.Border | NkPanelFlags.Movable | NkPanelFlags.Minimizable | NkPanelFlags.Title | NkPanelFlags.NoScrollbar;
+
+            if (nk_begin(ctx, "Chutpot Console", new NkRect(50, 50, 750, 300),
+                (uint)flags) != 0)
             {
-                string command = Marshal.PtrToStringAnsi(log, size);
-                ConsoleCommand.ExecuteCommand(command);
-            }
-            catch (Exception e) 
-            { 
-            }
 
+                nk_layout_row_dynamic(ctx, nk_window_get_height(ctx) - 70.0f, 1);
+                if (nk_group_begin(ctx, "Group", (uint)NkPanelFlags.Border) != 0)
+                {
+                    nk_layout_row_static(ctx, 18, (int)(nk_window_get_width(ctx) - 60.0f), 1);
+                    foreach (ConsoleLog log in ConsoleLogger.Logs)
+                    {
+                        nk_label_colored(ctx, log.message, (uint)NkTextAlignment.NK_TEXT_LEFT, log.color);
+                    }
+                    nk_group_end(ctx);
+                }
+                nk_layout_row_dynamic(ctx, 20.0f, 1);
+
+                
+                uint result = nk_edit_string_zero_terminated(ctx, (uint)(NkEditFlags.AlwaysInsertMode |NkEditFlags.Selectable | NkEditFlags.Clipboard | NkEditFlags.SigEnter), _buffer, _buffer.MaxCapacity, (ref nk_text_edit TextBox, uint Rune) => 1);
+                if ((result & (int)(NkEditEvents.Commited)) > 0)
+                {
+                    ConsoleCommand.ExecuteCommand(_buffer.ToString());
+                    _buffer.Clear();
+                }
+                
+            }
+            nk_end(ctx);
         }
     }
 }

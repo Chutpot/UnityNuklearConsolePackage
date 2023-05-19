@@ -7,8 +7,6 @@ namespace Chutpot.Nuklear.Console
 {
     public class UnityNuklearConsoleInputHandle : MonoBehaviour
     {
-        [DllImport("UnityNuklearConsole", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void SetOpen(bool isOpen);
 
         private bool _isOpen;
 
@@ -23,7 +21,6 @@ namespace Chutpot.Nuklear.Console
             if (Input.GetKeyDown(KeyCode.Tilde) || Input.GetKeyDown(KeyCode.BackQuote))
             {
                 _isOpen = !_isOpen;
-                SetOpen(_isOpen);
             }
 #endif
         }
