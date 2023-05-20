@@ -2,7 +2,8 @@
     "name": "com.chutpot.unitynuklearconsole.runtime",
     "rootNamespace": "Chutpot.Nuklear.Console",
     "references": [
-        "GUID:ce2f2106b11fd0a42b80759d8bef6a09"
+        "GUID:ce2f2106b11fd0a42b80759d8bef6a09",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
