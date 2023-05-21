@@ -153,7 +153,7 @@ namespace Chutpot.Nuklear.Console
                     Console.Log("> " + _command.ToString(), ConsoleLogType.Command);
                     ConsoleCommand.ExecuteCommand(_command.ToString());
                     _commandHistory.Add(_command.ToString());
-                    _command.Clear();
+                    _command = new StringBuilder(255);
                     nk_group_set_scroll(ctx, "Group", uint.MaxValue, uint.MaxValue);
                 }
                 

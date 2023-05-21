@@ -17,7 +17,6 @@ namespace Chutpot.Nuklear.Console
             Log("List commands with command \"List\"", ConsoleLogType.Console);
         }
 
-        [ConsoleCommand("Clear", "Clear the logs", true)]
         internal static void Clear() 
         {
             _logs.Clear();
